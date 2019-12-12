@@ -62,16 +62,18 @@ const instance = axios.create({
 
 let userData = [];
 
-instance.get("/users").then(res => {
-  console.log(res.data[1]);
-  userData = [...res.data];
-  console.log(userData[1])
-});
+instance
+  .get("/users")
+  .then(res => {
+    console.log(res.data[1]);
+    userData = res.data;
+    console.log(userData[1]);
+    userData.map(user => {
+      queryObj = insert_user(user);
+      pool
+        .query(queryObj)
+        .then(res => console.log(res))
+        .catch(e => console.error(e.stack));
+    })
+  })
 
-userData.map(user => {
-  queryObj = insert_user(user);
-  pool
-    .query(queryObj)
-    .then(res => console.log(res))
-    .catch(e => console.error(e.stack));
-});
